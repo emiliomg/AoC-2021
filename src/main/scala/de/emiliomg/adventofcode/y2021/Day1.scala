@@ -10,4 +10,9 @@ object Day1 {
     }
     result.cnt
   }
+
+  def star2(data: List[Int]): Int = {
+    val processedData = data.sliding(3).map(_.sum).toList
+    star1(processedData)
+  }
 }
