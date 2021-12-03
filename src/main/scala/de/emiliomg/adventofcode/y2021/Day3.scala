@@ -6,7 +6,7 @@ object Day3 {
 
   def star1(data: List[String]): Int = {
     val gammaValues = data.transpose.map { (row: List[Char]) =>
-      if (row.filter(_ == '1').length > (row.length / 2))
+      if (row.count(_ == '1') > (row.length / 2))
         1
       else
         0
@@ -29,7 +29,7 @@ object Day3 {
     def step(dataToConsider: List[String], pos: Int, comp: (Int, Float) => Boolean): String = {
       val numbersInPosition = dataToConsider.transpose.apply(pos)
       val choice =
-        if comp(numbersInPosition.filter(_ == '1').size, (numbersInPosition.size.toFloat / 2)) then '1' else '0'
+        if comp(numbersInPosition.count(_ == '1'), (numbersInPosition.size.toFloat / 2)) then '1' else '0'
       val survivorPositions = numbersInPosition.zipWithIndex.partition(_._1 == choice)._1.map(_._2)
       val survivors         = survivorPositions.map(dataToConsider(_))
 
