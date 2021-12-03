@@ -1,4 +1,4 @@
-package de.emiliomg.adventofcode.y2020
+package de.emiliomg.adventofcode.y2021
 
 import scala.util.matching.Regex
 

@@ -1,4 +1,4 @@
-package de.emiliomg.adventofcode.y2020
+package de.emiliomg.adventofcode.y2021
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
