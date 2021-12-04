@@ -13,7 +13,7 @@ class Day3Test extends AnyFlatSpec with Matchers {
   it should "work with the puzzle input" in {
     val result = Day3.star1(getPuzzleInput)
     pprint.pprintln(s"Day3, Star1: $result")
-    // result shouldEqual 1488669
+    result shouldEqual 3309596
   }
 
   "Star 2" should "work with the test input" in {
@@ -23,7 +23,7 @@ class Day3Test extends AnyFlatSpec with Matchers {
   it should "work with the puzzle input" in {
     val result = Day3.star2(getPuzzleInput)
     pprint.pprintln(s"Day3, Star2: $result")
-    // result shouldEqual 1176514794
+    result shouldEqual 2981085
   }
 
   private def getTestInput: List[String] = {
