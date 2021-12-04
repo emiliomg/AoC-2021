@@ -4,26 +4,54 @@ import scala.util.matching.Regex
 
 object Day4 {
   def star1(data: List[String]): Int = {
-    val originalNumbers: List[Int]  = getChosenNumbers(data)
-    val originalBoards: List[Board] = getBoards(data)
+    val originalNumbers: List[Int]  = getChosenNumbersFromRawData(data)
+    val originalBoards: List[Board] = getBoardsFromRawData(data)
 
-    def runNumbers(nextNumbers: List[Int], boards: List[Board]): Int = {
-      val currentNum: Int        = nextNumbers.head
-      val newBoards: List[Board] = boards.map(_.addNumber(currentNum))
+    val NextWinningBoard(board: Board, number: Int, _, _) = runBoards(originalNumbers, originalBoards)
 
-      newBoards.find(_.hasWon) match {
-        case Some(b) =>
-          val score = b.getScore
-          score * currentNum
-        case None => runNumbers(nextNumbers.tail, newBoards)
-      }
-    }
-
-    runNumbers(originalNumbers, originalBoards)
+    board.getScore * number
   }
 
   def star2(data: List[String]): Int = {
-    ???
+    val originalNumbers: List[Int]  = getChosenNumbersFromRawData(data)
+    val originalBoards: List[Board] = getBoardsFromRawData(data)
+
+    pprint.pprintln(originalNumbers)
+
+    def step(numbers: List[Int], boards: List[Board]): Int = {
+      runBoards(numbers, boards) match {
+        case NextWinningBoard(winBoard, winNumber, _, Nil) =>
+          println("######################## winner")
+          pprint.pprintln(winNumber)
+          pprint.pprintln(winBoard)
+          winBoard.getScore * winNumber
+        case NextWinningBoard(_, wn, leftoverNumbers, leftoverBoards) =>
+          println("######################## nextRound")
+          pprint.pprintln(s"wn: $wn")
+          pprint.pprintln(s"leftoverNumbers: $leftoverNumbers")
+          pprint.pprintln(s"leftoverBoards.size: ${leftoverBoards.size}")
+          step(leftoverNumbers, leftoverBoards)
+      }
+    }
+
+    step(originalNumbers, originalBoards)
+  }
+
+  case class NextWinningBoard(
+    winningBoard: Board,
+    winningNumber: Int,
+    leftoverNumbers: List[Int],
+    leftoverBoards: List[Board]
+  )
+
+  def runBoards(nextNumbers: List[Int], boards: List[Board]): NextWinningBoard = {
+    val currentNum: Int        = nextNumbers.head
+    val newBoards: List[Board] = boards.map(_.addNumber(currentNum))
+
+    newBoards.find(_.hasWon) match {
+      case Some(b) => NextWinningBoard(b, currentNum, nextNumbers.tail, newBoards.diff(List(b)))
+      case None    => runBoards(nextNumbers.tail, newBoards)
+    }
   }
 
   case class Position(number: Int, isChecked: Boolean) {
@@ -69,11 +97,11 @@ object Day4 {
     }
   }
 
-  def getChosenNumbers(data: List[String]): List[Int] = {
+  def getChosenNumbersFromRawData(data: List[String]): List[Int] = {
     data(0).split(",").map(_.toInt).toList
   }
 
-  def getBoards(data: List[String]): List[Board] = {
+  def getBoardsFromRawData(data: List[String]): List[Board] = {
     data
       .drop(1)             // drop chosen numbers
       .grouped(6)          // pick empty starting line and board definition
