@@ -7,30 +7,24 @@ object Day4 {
     val originalNumbers: List[Int]  = getChosenNumbersFromRawData(data)
     val originalBoards: List[Board] = getBoardsFromRawData(data)
 
-    val NextWinningBoard(board: Board, number: Int, _, _) = runBoards(originalNumbers, originalBoards)
-
-    board.getScore * number
+    runBoards(originalNumbers, originalBoards) match {
+      case NextWinningBoard(board: Board, number: Int, _, _) :: Nil => board.getScore * number
+      case Nil                                                      => throw Exception("No winning board :-(")
+      case omg => throw Exception(s"Got more than one final winning board: $omg")
+    }
   }
 
   def star2(data: List[String]): Int = {
     val originalNumbers: List[Int]  = getChosenNumbersFromRawData(data)
     val originalBoards: List[Board] = getBoardsFromRawData(data)
 
-    pprint.pprintln(originalNumbers)
-
     def step(numbers: List[Int], boards: List[Board]): Int = {
       runBoards(numbers, boards) match {
-        case NextWinningBoard(winBoard, winNumber, _, Nil) =>
-          println("######################## winner")
-          pprint.pprintln(winNumber)
-          pprint.pprintln(winBoard)
+        case NextWinningBoard(winBoard, winNumber, _, Nil) :: Nil =>
           winBoard.getScore * winNumber
-        case NextWinningBoard(_, wn, leftoverNumbers, leftoverBoards) =>
-          println("######################## nextRound")
-          pprint.pprintln(s"wn: $wn")
-          pprint.pprintln(s"leftoverNumbers: $leftoverNumbers")
-          pprint.pprintln(s"leftoverBoards.size: ${leftoverBoards.size}")
+        case NextWinningBoard(_, wn, leftoverNumbers, leftoverBoards) :: _ =>
           step(leftoverNumbers, leftoverBoards)
+        case omg => throw Exception(s"This should not happen: $omg")
       }
     }
 
@@ -44,13 +38,19 @@ object Day4 {
     leftoverBoards: List[Board]
   )
 
-  def runBoards(nextNumbers: List[Int], boards: List[Board]): NextWinningBoard = {
+  def runBoards(nextNumbers: List[Int], boards: List[Board]): List[NextWinningBoard] = {
     val currentNum: Int        = nextNumbers.head
     val newBoards: List[Board] = boards.map(_.addNumber(currentNum))
 
-    newBoards.find(_.hasWon) match {
-      case Some(b) => NextWinningBoard(b, currentNum, nextNumbers.tail, newBoards.diff(List(b)))
-      case None    => runBoards(nextNumbers.tail, newBoards)
+    newBoards.filter(_.hasWon) match {
+      case winningBoards if winningBoards.size > 0 =>
+        val leftoverBoards = newBoards.diff(winningBoards)
+        winningBoards.map { b =>
+          NextWinningBoard(b, currentNum, nextNumbers.tail, leftoverBoards)
+        }
+
+      case Nil => runBoards(nextNumbers.tail, newBoards)
+      case omg => throw Exception(s"This should not happen $omg")
     }
   }
 
