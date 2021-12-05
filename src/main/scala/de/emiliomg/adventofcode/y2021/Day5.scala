@@ -30,21 +30,26 @@ object Day5 {
 
   case class Point(x: Int, y: Int) {
     def to(other: Point, ignoreDiagonal: Boolean): List[Point] = {
-      val xDiff = other.x - x
-      val xStep = if x < other.x then 1 else -1
-      val yDiff = other.y - y
-      val yStep = if y < other.y then 1 else -1
+      val xDiff = Math.abs(other.x - x)
+      val xDir  = if x < other.x then 1 else -1
+      val yDiff = Math.abs(other.y - y)
+      val yDir  = if y < other.y then 1 else -1
 
+      // This is really really ugly :-(
       if (isDiagonalTo(other)) {
         if ignoreDiagonal then return List()
-        List()
+        if xDiff != yDiff then throw Exception(s"Diagonal move not 45°, this should not happen: $this -> $other")
+
+        (0 to xDiff).toList.map { d =>
+          Point(x + (d * xDir), y + (d * yDir))
+        }
       } else {
-        val xMove = (0 to xDiff by xStep).toList.map { d =>
-          Point(x + d, y)
+        val xMove = (0 to xDiff).toList.map { d =>
+          Point(x + (d * xDir), y)
         }
 
-        val yMove = (0 to yDiff by yStep).toList.map { d =>
-          Point(x, y + d)
+        val yMove = (0 to yDiff).toList.map { d =>
+          Point(x, y + (d * yDir))
         }
 
         (xMove ++ yMove).distinct
