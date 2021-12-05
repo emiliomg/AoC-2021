@@ -17,7 +17,7 @@ class Day5Test extends AnyFlatSpec with Matchers {
   }
 
   // "Star 2" should "work with the test input" in {
-  //   Day5.star2(getTestInput) shouldEqual 1924
+  //   Day5.star2(getTestInput) shouldEqual 12
   // }
 
   // it should "work with the puzzle input" in {
