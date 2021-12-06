@@ -3,12 +3,21 @@ package de.emiliomg.adventofcode.y2021
 import scala.util.matching.Regex
 
 object Day6 {
-  def star1(data: List[String]): Int = {
+  def star1(data: List[String]): Long = {
     val originalFish = getFishFromData(data)
+    simulateFish(originalFish, 80)
+  }
 
-    def step(fish: Map[Int, Int], day: Int): Int = {
+  def star2(data: List[String]): Long = {
+    val originalFish = getFishFromData(data)
+    simulateFish(originalFish, 256)
+  }
+
+  def simulateFish(originalFish: Map[Int, Long], finalDay: Int): Long = {
+
+    def step(fish: Map[Int, Long], day: Int): Long = {
       val newDay = day + 1
-      val newFish = fish.foldLeft(Map[Int, Int]()) {
+      val newFish = fish.foldLeft(Map[Int, Long]()) {
         case (acc, (daysToSpawn, numFish)) if daysToSpawn == 0 =>
           acc
             .updatedWith(6) {
@@ -26,7 +35,7 @@ object Day6 {
           }
       }
 
-      if (newDay == 80) {
+      if (newDay == finalDay) {
         newFish.values.sum
       } else step(newFish, newDay)
     }
@@ -34,10 +43,6 @@ object Day6 {
     step(originalFish, 0)
   }
 
-  def star2(data: List[String]): Int = {
-    ???
-  }
-
-  def getFishFromData(data: List[String]) =
-    data.head.split(",").map(_.toInt).toList.groupBy(identity).mapValues(_.size).toMap
+  def getFishFromData(data: List[String]): Map[Int, Long] =
+    data.head.split(",").map(_.toInt).toList.groupBy(identity).mapValues(_.size.toLong).toMap
 }

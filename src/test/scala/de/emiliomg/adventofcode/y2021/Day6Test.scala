@@ -16,15 +16,15 @@ class Day6Test extends AnyFlatSpec with Matchers {
     result shouldEqual 390923
   }
 
-  // "Star 2" should "work with the test input" in {
-  //   Day6.star2(getTestInput) shouldEqual 12
-  // }
+  "Star 2" should "work with the test input" in {
+    Day6.star2(getTestInput) shouldEqual 26984457539L
+  }
 
-  // it should "work with the puzzle input" in {
-  //   val result = Day6.star2(getPuzzleInput)
-  //   pprint.pprintln(s"Day6, Star2: $result")
-  //   // result shouldEqual 3178
-  // }
+  it should "work with the puzzle input" in {
+    val result = Day6.star2(getPuzzleInput)
+    pprint.pprintln(s"Day6, Star2: $result")
+    result shouldEqual 1749945484935L
+  }
 
   private def getTestInput: List[String] = {
     """3,4,3,1,2""".stripMargin.split("\n").toList
