@@ -16,15 +16,23 @@ class Day8Test extends AnyFlatSpec with Matchers {
     result shouldEqual 445
   }
 
-  // "Star 2" should "work with the test input" in {
-  //   Day8.star2(getTestInput) shouldEqual 168
-  // }
+  "Star 2" should "work with the small test input" in {
+    Day8.star2(getSmallTestInput) shouldEqual 5353
+  }
 
-  // it should "work with the puzzle input" in {
-  //   val result = Day8.star2(getPuzzleInput)
-  //   pprint.pprintln(s"Day8, Star2: $result")
-  //   result shouldEqual 101079875
-  // }
+  it should "work with the large test input" in {
+    Day8.star2(getTestInput) shouldEqual 61229
+  }
+
+  it should "work with the puzzle input" in {
+    val result = Day8.star2(getPuzzleInput)
+    pprint.pprintln(s"Day8, Star2: $result")
+    result shouldEqual 1043101
+  }
+
+  private def getSmallTestInput: List[String] = List(
+    "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf"
+  )
 
   private def getTestInput: List[String] = {
     """be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe
