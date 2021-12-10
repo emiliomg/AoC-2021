@@ -22,7 +22,24 @@ object Day10 {
   }
 
   def star2(data: List[String]): Long = {
-    ???
+    val listOfPoints = data
+      .map(LineType.fromLine)
+      .collect { case l: IncompleteLine => l }
+      .map { incompleteLine =>
+        incompleteLine.remainingStack.foldLeft(0L) { (score, c) =>
+          val newPoints: Long = c match {
+            case '(' => 1
+            case '[' => 2
+            case '{' => 3
+            case '<' => 4
+            case omg => throw Exception(s"Got $omg, this should not happen")
+          }
+          (score * 5) + newPoints
+        }
+      }
+      .sorted
+
+    listOfPoints(listOfPoints.size / 2)
   }
 
   object OpeningChar {
@@ -54,8 +71,8 @@ object Day10 {
   }
 
   trait LineType
-  case class CorruptedLine(val firstCorrupted: Char) extends LineType
-  case class IncompleteLine(val missing: Char)       extends LineType
+  case class CorruptedLine(val firstCorrupted: Char)         extends LineType
+  case class IncompleteLine(val remainingStack: Stack[Char]) extends LineType
 
   object LineType {
     def fromLine(line: String): LineType = {
@@ -63,7 +80,7 @@ object Day10 {
 
       def step(toProcess: List[Char]): LineType = {
         toProcess.headOption match {
-          case None if stack.nonEmpty => IncompleteLine('?')
+          case None if stack.nonEmpty => IncompleteLine(stack)
           case Some(char @ OpeningChar()) =>
             stack.push(char)
             step(toProcess.tail)
