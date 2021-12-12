@@ -15,7 +15,10 @@ object Day11 {
   }
 
   def star2(data: List[String]): Long = {
-    ???
+    val grid         = Grid.fromData(data)
+    val numOfOctopus = grid.cells.size
+
+    LazyList.iterate(grid)(_.step).indexWhere(_.justFlashed == numOfOctopus)
   }
 
   case class Position(x: Int, y: Int)
